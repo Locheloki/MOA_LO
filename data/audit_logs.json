@@ -1,0 +1,266 @@
+[
+  {
+    "id": "log-1788925177539",
+    "timestamp": "2026-09-09T03:39:37.539Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1788921588297",
+    "timestamp": "2026-09-09T02:39:48.297Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "UPDATE_STUDENT",
+    "details": "Updated student details for: Guillermo Jimz Jimenez"
+  },
+  {
+    "id": "log-1787814877674",
+    "timestamp": "2026-08-27T07:14:37.674Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1787812945842",
+    "timestamp": "2026-08-27T06:42:25.842Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1787812738039",
+    "timestamp": "2026-08-27T06:38:58.039Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1787548841242",
+    "timestamp": "2026-08-24T05:20:41.242Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1786598932500",
+    "timestamp": "2026-08-13T05:28:52.500Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1786598922747",
+    "timestamp": "2026-08-13T05:28:42.747Z",
+    "userName": "Guillermo Jimenez",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8.73 hrs for student ID: stud-1786505491247 on 2026-08-13 (Pending)"
+  },
+  {
+    "id": "log-1786598756274",
+    "timestamp": "2026-08-13T05:25:56.274Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1786598666070-927 (Pending) for student ID: 2026-49292"
+  },
+  {
+    "id": "log-1786598671083",
+    "timestamp": "2026-08-13T05:24:31.083Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1786598666071",
+    "timestamp": "2026-08-13T05:24:26.071Z",
+    "userName": "Guillermo Jimenez (Self-Log)",
+    "userRole": "Student",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.63 hrs for student ID: 2026-49292 on 2026-08-13 (Pending)"
+  },
+  {
+    "id": "log-1786598585468",
+    "timestamp": "2026-08-13T05:23:05.468Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1786598417902",
+    "timestamp": "2026-08-13T05:20:17.902Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1786598277789",
+    "timestamp": "2026-08-13T05:17:57.789Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1786597794290",
+    "timestamp": "2026-08-13T05:09:54.290Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1786522064248",
+    "timestamp": "2026-08-12T08:07:44.248Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1786519287902-797 (Pending) for student ID: test"
+  },
+  {
+    "id": "log-1786522059645",
+    "timestamp": "2026-08-12T08:07:39.645Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.67 hrs for student ID: stud-1786505491247 on 2026-08-12 (Pending)"
+  },
+  {
+    "id": "log-1786519910367",
+    "timestamp": "2026-08-12T07:31:50.367Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1786519868255-385 (Pending) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1786519905996",
+    "timestamp": "2026-08-12T07:31:45.996Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1786517538672-617 (Pending) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1786519901247",
+    "timestamp": "2026-08-12T07:31:41.247Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1786518346709-749 (Pending) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1786519896671",
+    "timestamp": "2026-08-12T07:31:36.671Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1786511674737-562 (Approved) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1786519868256",
+    "timestamp": "2026-08-12T07:31:08.256Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: stud-1786505491247 on 2026-07-13 (Pending)"
+  },
+  {
+    "id": "log-1786519287902",
+    "timestamp": "2026-08-12T07:21:27.902Z",
+    "userName": "Admin",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: test on 2026-08-12 (Pending)"
+  },
+  {
+    "id": "log-1786518346710",
+    "timestamp": "2026-08-12T07:05:46.710Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: stud-1786505491247 on 2026-07-11 (Pending)"
+  },
+  {
+    "id": "log-1786517538673",
+    "timestamp": "2026-08-12T06:52:18.673Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: stud-1786505491247 on 2026-07-10 (Pending)"
+  },
+  {
+    "id": "log-1786517388734",
+    "timestamp": "2026-08-12T06:49:48.734Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "UPDATE_TIME_LOG",
+    "details": "Updated time log tl-1786511674737-562 for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1786516625870",
+    "timestamp": "2026-08-12T06:37:05.870Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "BULK_APPROVE_TIME_LOGS",
+    "details": "Bulk approved 2 time logs across 2 students"
+  },
+  {
+    "id": "log-1786511674737",
+    "timestamp": "2026-08-12T05:14:34.737Z",
+    "userName": "System/Anonymous",
+    "userRole": "System",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: stud-1786505491247 on 2026-08-12 (Pending)"
+  },
+  {
+    "id": "log-1786505491250",
+    "timestamp": "2026-08-12T03:31:31.250Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_STUDENT",
+    "details": "Enrolled student: Guillermo Jimenez (2026-49292)"
+  },
+  {
+    "id": "log-1786066065456",
+    "timestamp": "2026-08-07T01:27:45.456Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1786063789358",
+    "timestamp": "2026-08-07T00:49:49.358Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "UPDATE_STUDENT",
+    "details": "Updated student details for: Alexander Cruz"
+  },
+  {
+    "id": "log-1786063789127",
+    "timestamp": "2026-08-07T00:49:49.127Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_RECORD",
+    "details": "Created MOA control: MOA-2026-0004 - \"TEST - TEST MOA\""
+  },
+  {
+    "id": "log-1785913793603",
+    "timestamp": "2026-08-05T07:09:53.603Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_STUDENT_BULK",
+    "details": "Bulk enrolled 575 students"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": "org-google",
+    "name": "Google Philippines Inc.",
+    "address": "SPC Building, Bonifacio Global City, Taguig City, Metro Manila",
+    "contactPerson": "Bernadette L. Sy",
+    "contactNumber": "+63 2 8876 1234",
+    "email": "bernadette.sy@google.com",
+    "industry": "Technology / Software",
+    "notes": "Industry partner for computer science and IT internship placement.",
+    "status": "Active",
+    "createdAt": "2026-08-05T14:30:00.000Z",
+    "updatedAt": "2026-08-05T14:30:00.000Z",
+    "timeline": [
+      {
+        "id": "t-org-1",
+        "type": "Created",
+        "description": "Organization profile added to registry",
+        "timestamp": "2026-08-05T14:30:00.000Z",
+        "user": "Administrator"
+      }
+    ]
+  },
+  {
+    "id": "org-capitol-health",
+    "name": "Capitol Regional Health & Medical Center",
+    "address": "Capitol Compound, Lingayen, Pangasinan",
+    "contactPerson": "Dr. Maria Teresa Santos",
+    "contactNumber": "+63 75 522 8900",
+    "email": "contact@capitolhealth.gov.ph",
+    "industry": "Healthcare / Hospital",
+    "notes": "Clinical internship and nursing rotation agreement.",
+    "status": "Active",
+    "createdAt": "2026-08-05T14:45:00.000Z",
+    "updatedAt": "2026-08-05T14:45:00.000Z",
+    "timeline": [
+      {
+        "id": "t-org-2",
+        "type": "Created",
+        "description": "Organization profile added to registry",
+        "timestamp": "2026-08-05T14:45:00.000Z",
+        "user": "Administrator"
+      }
+    ]
+  },
+  {
+    "id": "org-pangasinan-tech",
+    "name": "Pangasinan Tech & Innovation Hub",
+    "address": "Provincial Capitol Compound, Lingayen, Pangasinan",
+    "contactPerson": "Engr. Marco V. Ramos",
+    "contactNumber": "+63 75 632 1144",
+    "email": "info@pangasinan-tech.org",
+    "industry": "Research & Technology",
+    "notes": "Joint software development and AI incubation partner.",
+    "status": "Active",
+    "createdAt": "2026-08-05T15:00:00.000Z",
+    "updatedAt": "2026-08-05T15:00:00.000Z",
+    "timeline": [
+      {
+        "id": "t-org-3",
+        "type": "Created",
+        "description": "Organization profile added to registry",
+        "timestamp": "2026-08-05T15:00:00.000Z",
+        "user": "Administrator"
+      }
+    ]
+  }
+]

@@ -282,10 +282,7 @@ export default function OrganizationsTab({
                       {orgRecords.map(rec => (
                         <div key={rec.id} className="border border-glass-stroke rounded p-4 bg-[#0e0e0e]/60 hover:bg-surface-container-highest/30 transition-all flex flex-col justify-between shadow-[0_2px_8px_rgba(0,0,0,0.2)]">
                           <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] font-mono font-bold text-primary bg-surface-container px-1.5 py-0.5 rounded border border-glass-stroke">
-                                {rec.controlNumber}
-                              </span>
+                            <div className="flex items-center justify-end">
                               <span className={`inline-flex items-center px-2 py-0.5 rounded font-mono text-[9px] tracking-widest uppercase ${
                                 rec.status === 'Active' || rec.status === 'Issued' || rec.status === 'Renewed'
                                   ? 'bg-[#1a2e1f] border border-[#2d5a39] text-[#4ade80]'

@@ -753,7 +753,11 @@ const calculateStudentProgressFromApprovedLogs = (student: any, approvedLogs: an
   if (isCompleted) {
     finalHoursCompleted = roundedHours;
     finalStatus = 'Completed';
-    finalEndDate = calculatedEndDate;
+    finalEndDate = student.endDate || calculatedEndDate;
+  } else if (student.endDate) {
+    finalHoursCompleted = Math.max(roundedHours, targetHours);
+    finalStatus = 'Completed';
+    finalEndDate = student.endDate;
   } else if (student.status === 'Completed' && targetHours > 0 && appliedLegacyHours === 0) {
     finalHoursCompleted = Math.max(roundedHours, targetHours);
     finalStatus = 'Completed';
@@ -884,21 +888,38 @@ app.post('/api/time-logs', (req, res) => {
 
     const timeLogs = readJSON(TIME_LOGS_FILE, []);
 
+    // Check if entry was made outside the system (e.g. login page kiosk / unauthenticated student)
+    // Entries made on the main system (by Administrator, OJT Coordinator, Legal Team, or explicit status 'Approved') are automatically Approved.
+    // Entries made outside the system (kiosk / login page) remain Pending for review.
+    const isOutsideSystem = log.source === 'kiosk' || log.source === 'login_kiosk' || !user || user.role === 'Student';
+    const isApproved = !isOutsideSystem && (log.status === 'Approved' || user.role === 'Administrator' || user.role === 'OJT Coordinator' || user.role === 'Legal Team');
+
+    const status = isApproved ? 'Approved' : 'Pending';
+    const nowIso = new Date().toISOString();
+    const reviewerName = user?.name || user?.username || 'Administrator';
+
     const newLog = {
       ...log,
       id: `tl-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      status: 'Pending', // New time logs MUST default to Pending
+      status,
+      reviewedBy: isApproved ? (log.reviewedBy || reviewerName) : undefined,
+      reviewedAt: isApproved ? (log.reviewedAt || nowIso) : undefined,
       breakMinutes: Number(log.breakMinutes) || 0,
       hoursRendered,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      createdAt: nowIso,
+      updatedAt: nowIso
     };
 
     timeLogs.unshift(newLog);
     writeJSON(TIME_LOGS_FILE, timeLogs);
 
-    logAuditEvent(user, 'CREATE_TIME_LOG', `Logged ${hoursRendered} hrs for student ID: ${newLog.studentId} on ${newLog.date} (Pending)`);
-    res.json(newLog);
+    let updatedStudent = null;
+    if (status === 'Approved') {
+      updatedStudent = recalculateStudentHours(newLog.studentId, user);
+    }
+
+    logAuditEvent(user, 'CREATE_TIME_LOG', `Logged ${hoursRendered} hrs for student ID: ${newLog.studentId} on ${newLog.date} (${status})`);
+    res.json({ ...newLog, log: newLog, updatedStudent });
   } catch (err: any) {
     console.error('Error creating time log:', err);
     res.status(500).json({ error: 'Failed to create time log. ' + (err.message || '') });
@@ -952,6 +973,10 @@ app.post('/api/time-logs/bulk', (req, res) => {
     });
 
     const updatedLogsList = [...timeLogs];
+    const isMainSystem = user && (user.role === 'Administrator' || user.role === 'OJT Coordinator' || user.role === 'Legal Team');
+    const bulkStatus = isMainSystem ? 'Approved' : 'Pending';
+    const bulkReviewer = isMainSystem ? (user?.name || user?.username || 'Administrator') : undefined;
+    const nowIso = new Date().toISOString();
 
     logs.forEach((logData: any) => {
       const existing = existingByDateMap.get(logData.date);
@@ -973,8 +998,10 @@ app.post('/api/time-logs/bulk', (req, res) => {
                 breakMinutes: Number(logData.breakMinutes) || 0,
                 hoursRendered: Number(logData.hoursRendered) || 0,
                 notes: logData.notes || '',
-                status: 'Pending', // Resets status to Pending on edit/replace
-                updatedAt: new Date().toISOString()
+                status: bulkStatus,
+                reviewedBy: bulkReviewer,
+                reviewedAt: isMainSystem ? nowIso : undefined,
+                updatedAt: nowIso
               };
               replaced.push({
                 date: logData.date,
@@ -1000,9 +1027,11 @@ app.post('/api/time-logs/bulk', (req, res) => {
           breakMinutes: Number(logData.breakMinutes) || 0,
           hoursRendered: Number(logData.hoursRendered) || 0,
           notes: logData.notes || '',
-          status: 'Pending',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          status: bulkStatus,
+          reviewedBy: bulkReviewer,
+          reviewedAt: isMainSystem ? nowIso : undefined,
+          createdAt: nowIso,
+          updatedAt: nowIso
         };
         updatedLogsList.unshift(newLog);
         created.push(newLog);
@@ -1146,7 +1175,17 @@ app.post('/api/time-logs/:id/reject', (req, res) => {
 
 app.delete('/api/time-logs/:id', (req, res) => {
   const { id } = req.params;
-  const user = req.body.user;
+  let user = req.body?.user;
+  if (!user && req.query?.user) {
+    try {
+      user = JSON.parse(req.query.user as string);
+    } catch {}
+  }
+  if (!user && req.headers['x-user']) {
+    try {
+      user = JSON.parse(req.headers['x-user'] as string);
+    } catch {}
+  }
 
   if (!user || (user.role !== 'Administrator' && user.role !== 'OJT Coordinator')) {
     return res.status(403).json({ error: 'Unauthorized: Only Administrators and OJT Coordinators can delete time logs.' });

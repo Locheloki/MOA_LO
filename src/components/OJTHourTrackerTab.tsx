@@ -30,7 +30,8 @@ import {
   ChevronDown,
   TrendingUp,
   Sparkles,
-  Zap
+  Zap,
+  RefreshCw
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -46,7 +47,7 @@ interface OJTHourTrackerTabProps {
   onDeleteLog: (id: string) => Promise<void>;
   onBulkApprove: (ids: string[]) => Promise<void>;
   onAddLogsBulk: (
-    logs: Omit<OJTTimeLog, 'id' | 'createdAt' | 'updatedAt' | 'status'>[],
+    logs: (Omit<OJTTimeLog, 'id' | 'createdAt' | 'updatedAt' | 'status'> & { status?: TimeLogStatus; reviewedBy?: string; reviewedAt?: string })[],
     replaceExisting: boolean
   ) => Promise<{
     created: OJTTimeLog[];
@@ -55,6 +56,7 @@ interface OJTHourTrackerTabProps {
     protected: { date: string; status: TimeLogStatus }[];
     failed: { date: string; reason: string }[];
   }>;
+  onRefresh?: () => Promise<void>;
 }
 
 export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
@@ -62,6 +64,7 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
   students,
   userRole,
   userName,
+  onRefresh,
   onAddLog,
   onUpdateLog,
   onApproveLog,
@@ -91,8 +94,114 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
     return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   };
 
+  // Helper: Get next working date (skips Saturday and Sunday by default)
+  const getNextLogDate = (previousDateStr?: string, excludeWeekends: boolean = true): string => {
+    if (!previousDateStr) {
+      const today = new Date();
+      if (excludeWeekends) {
+        if (today.getDay() === 6) today.setDate(today.getDate() + 2);
+        else if (today.getDay() === 0) today.setDate(today.getDate() + 1);
+      }
+      return today.toISOString().split('T')[0];
+    }
+
+    const parts = previousDateStr.split('-').map(Number);
+    if (parts.length !== 3 || parts.some(isNaN)) {
+      return new Date().toISOString().split('T')[0];
+    }
+    const [year, month, day] = parts;
+    const nextDate = new Date(year, month - 1, day);
+    nextDate.setDate(nextDate.getDate() + 1);
+
+    if (excludeWeekends) {
+      const dayOfWeek = nextDate.getDay();
+      if (dayOfWeek === 6) { // Saturday -> advance to Monday
+        nextDate.setDate(nextDate.getDate() + 2);
+      } else if (dayOfWeek === 0) { // Sunday -> advance to Monday
+        nextDate.setDate(nextDate.getDate() + 1);
+      }
+    }
+
+    const y = nextDate.getFullYear();
+    const m = String(nextDate.getMonth() + 1).padStart(2, '0');
+    const d = String(nextDate.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  };
+
+  // Helper: Find next date for a student based on their last recorded log or start date (strictly skips weekends)
+  const getStudentNextDate = (studentId: string): string => {
+    if (!studentId) {
+      return getNextLogDate(undefined, true);
+    }
+
+    const studentLogs = timeLogs.filter(l => l.studentId === studentId);
+    if (studentLogs.length > 0) {
+      const sorted = [...studentLogs].sort((a, b) => b.date.localeCompare(a.date));
+      return getNextLogDate(sorted[0].date, true);
+    }
+
+    const student = students.find(s => s.id === studentId);
+    if (student?.startDate) {
+      const parts = student.startDate.split('-').map(Number);
+      if (parts.length === 3 && !parts.some(isNaN)) {
+        const d = new Date(parts[0], parts[1] - 1, parts[2]);
+        if (d.getDay() === 6) d.setDate(d.getDate() + 2); // Saturday -> Monday
+        else if (d.getDay() === 0) d.setDate(d.getDate() + 1); // Sunday -> Monday
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const dayStr = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${dayStr}`;
+      }
+      return student.startDate;
+    }
+
+    return getNextLogDate(undefined, true);
+  };
+
   // Authorization flags
   const canApprove = userRole === 'Administrator' || userRole === 'OJT Coordinator';
+
+  // Refreshing State
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  const handleRefresh = async () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    try {
+      if (onRefresh) {
+        await onRefresh();
+      }
+      toast.success('Hour tracker entries refreshed');
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to refresh hour tracker');
+    } finally {
+      setTimeout(() => {
+        setIsRefreshing(false);
+      }, 400);
+    }
+  };
+
+  // Delete confirmation dialog state
+  const [logToDelete, setLogToDelete] = useState<{ id: string; studentName: string; date: string; hours: number } | null>(null);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+
+  const handleConfirmDelete = async () => {
+    if (!logToDelete) return;
+    setIsDeleting(true);
+    try {
+      await onDeleteLog(logToDelete.id);
+      if (editingLog && editingLog.id === logToDelete.id) {
+        setIsLogModalOpen(false);
+        setEditingLog(null);
+      }
+      setLogToDelete(null);
+    } catch (err) {
+      console.error('Delete error:', err);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   // Form State for Log Modal
   const [formStudentId, setFormStudentId] = useState<string>('');
@@ -104,6 +213,10 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
   const [formManualHours, setFormManualHours] = useState<number>(8);
   const [formManualReason, setFormManualReason] = useState<string>('');
   const [formNotes, setFormNotes] = useState<string>('');
+  
+  // Previous log tracking in session for continuous encoding
+  const [lastLoggedStudentId, setLastLoggedStudentId] = useState<string>('');
+  const [lastLoggedDate, setLastLoggedDate] = useState<string>('');
 
   // Search & Filter State
   const [selectedStudentId, setSelectedStudentId] = useState<string>('ALL');
@@ -364,6 +477,15 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
 
   const effectiveFormHours = formIsManual ? formManualHours : calculatedFormHours;
 
+  // Previous recorded log date for the currently chosen student in form
+  const previousLogDateForFormStudent = useMemo(() => {
+    if (!formStudentId) return null;
+    const studentLogs = timeLogs.filter(l => l.studentId === formStudentId);
+    if (studentLogs.length === 0) return null;
+    const sorted = [...studentLogs].sort((a, b) => b.date.localeCompare(a.date));
+    return sorted[0].date;
+  }, [formStudentId, timeLogs]);
+
   // Check for duplicate / overlapping logs for current student & date
   const overlapWarning = useMemo(() => {
     if (!formStudentId || !formDate || !formTimeIn || !formTimeOut) return null;
@@ -384,7 +506,6 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
     setIsModalStudentDropdownOpen(false);
     setModalStudentSearchQuery('');
     setFormLogMode('single');
-    setFormStartDate(new Date().toISOString().split('T')[0]);
     setFormDaysToGenerate(5);
     setFormExcludeWeekends(true);
     setFormBulkSelectedDates([]);
@@ -394,6 +515,7 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
     if (logToEdit) {
       setFormStudentId(logToEdit.studentId);
       setFormDate(logToEdit.date);
+      setFormStartDate(logToEdit.date);
       setFormTimeIn(logToEdit.timeIn);
       setFormTimeOut(logToEdit.timeOut);
       setFormBreakMinutes(logToEdit.breakMinutes || 60);
@@ -402,8 +524,15 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
       setFormManualReason(logToEdit.manualOverrideReason || '');
       setFormNotes(logToEdit.notes || '');
     } else {
-      setFormStudentId(defaultStudentId || (students[0]?.id || ''));
-      setFormDate(defaultDate || new Date().toISOString().split('T')[0]);
+      const targetStudentId = defaultStudentId || (selectedStudentId !== 'ALL' ? selectedStudentId : (lastLoggedStudentId || students[0]?.id || ''));
+      const targetDate = defaultDate || (
+        lastLoggedStudentId === targetStudentId && lastLoggedDate
+          ? getNextLogDate(lastLoggedDate, true)
+          : getStudentNextDate(targetStudentId)
+      );
+      setFormStudentId(targetStudentId);
+      setFormDate(targetDate);
+      setFormStartDate(targetDate);
       setFormTimeIn('08:00');
       setFormTimeOut('17:00');
       setFormBreakMinutes(60);
@@ -416,7 +545,7 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
   };
 
   // Submit Handler for Log Modal
-  const handleSaveLog = async (e: React.FormEvent) => {
+  const handleSaveLog = async (e: React.FormEvent, keepOpenAndAdvance: boolean = false) => {
     e.preventDefault();
 
     if (formLogMode === 'bulk') {
@@ -484,7 +613,11 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
           notes: formNotes.trim()
         });
         toast.success('Time log updated successfully.');
+        setIsLogModalOpen(false);
       } else {
+        const nowIso = new Date().toISOString();
+        const reviewerName = userName || userRole || 'Administrator';
+
         await onAddLog({
           studentId: formStudentId,
           date: formDate,
@@ -495,11 +628,26 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
           isManualOverride: formIsManual,
           manualOverrideReason: formIsManual ? formManualReason : undefined,
           notes: formNotes.trim(),
-          status: 'Pending'
+          status: 'Approved',
+          reviewedBy: reviewerName,
+          reviewedAt: nowIso
         });
-        toast.success('Daily time log submitted (Status: Pending Approval).');
+
+        // Remember student and date for continuous next-day encoding
+        setLastLoggedStudentId(formStudentId);
+        setLastLoggedDate(formDate);
+
+        if (keepOpenAndAdvance) {
+          const nextDate = getNextLogDate(formDate, true);
+          setFormDate(nextDate);
+          setFormStartDate(nextDate);
+          setFormNotes('');
+          toast.success(`Log for ${formDate} saved and approved! Ready for next day (${nextDate}).`);
+        } else {
+          toast.success('Daily time log saved and approved.');
+          setIsLogModalOpen(false);
+        }
       }
-      setIsLogModalOpen(false);
     } catch (err: any) {
       toast.error(err.message || 'Failed to save time log.');
     }
@@ -507,6 +655,9 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
 
   // Submit Handler for Bulk logs
   const executeBulkSave = async (replaceExisting: boolean) => {
+    const nowIso = new Date().toISOString();
+    const reviewerName = userName || userRole || 'Administrator';
+
     const logsToCreate = formBulkSelectedDates.map(dateStr => ({
       studentId: formStudentId,
       date: dateStr,
@@ -516,7 +667,10 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
       hoursRendered: effectiveFormHours,
       isManualOverride: formIsManual,
       manualOverrideReason: formIsManual ? formManualReason : undefined,
-      notes: formNotes.trim()
+      notes: formNotes.trim(),
+      status: 'Approved' as const,
+      reviewedBy: reviewerName,
+      reviewedAt: nowIso
     }));
 
     try {
@@ -726,6 +880,16 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
               </button>
             );
           })()}
+
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="px-3 py-2 bg-surface-container border border-glass-stroke text-starlight-white hover:border-primary/50 text-xs font-mono rounded-xl transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            title="Refresh Hour Tracker data"
+          >
+            <RefreshCw className={`h-4 w-4 text-secondary ${isRefreshing ? 'animate-spin text-primary' : ''}`} />
+            REFRESH
+          </button>
 
           <button
             onClick={() => openLogModal(null)}
@@ -1198,11 +1362,12 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
 
                             {canApprove && (
                               <button
-                                onClick={() => {
-                                  if (confirm(`Delete time log for ${studentName} on ${log.date}? If this log was approved, student completed hours will be recalculated.`)) {
-                                    onDeleteLog(log.id);
-                                  }
-                                }}
+                                onClick={() => setLogToDelete({
+                                  id: log.id,
+                                  studentName,
+                                  date: log.date,
+                                  hours: log.hoursRendered
+                                })}
                                 className="p-1 text-secondary hover:text-red-400 hover:bg-surface-container rounded transition-colors cursor-pointer"
                                 title="Delete Log"
                               >
@@ -1400,12 +1565,19 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
                           >
                             <Edit3 className="h-3.5 w-3.5" /> Edit
                           </button>
-                          <button
-                            onClick={() => onDeleteLog(log.id)}
-                            className="px-3 py-1.5 bg-surface-container border border-glass-stroke text-red-400 hover:bg-red-500/20 font-mono text-xs rounded-lg transition-all cursor-pointer flex items-center gap-1"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" /> Delete
-                          </button>
+                          {canApprove && (
+                            <button
+                              onClick={() => setLogToDelete({
+                                id: log.id,
+                                studentName,
+                                date: log.date,
+                                hours: log.hoursRendered
+                              })}
+                              className="px-3 py-1.5 bg-surface-container border border-glass-stroke text-red-400 hover:bg-red-500/20 font-mono text-xs rounded-lg transition-all cursor-pointer flex items-center gap-1"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" /> Delete
+                            </button>
+                          )}
                         </div>
                       )}
                     </div>
@@ -1659,7 +1831,16 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
                         <div className="px-2.5 py-4 text-center text-xs text-secondary font-mono italic">No matching students</div>
                       ) : (
                         filteredStudentsForModalDropdown.map(s => (
-                          <button key={s.id} type="button" onClick={() => { setFormStudentId(s.id); setIsModalStudentDropdownOpen(false); setModalStudentSearchQuery(''); }}
+                          <button key={s.id} type="button" onClick={() => {
+                            setFormStudentId(s.id);
+                            if (!selectedCalendarDate) {
+                              const nextDate = getStudentNextDate(s.id);
+                              setFormDate(nextDate);
+                              setFormStartDate(nextDate);
+                            }
+                            setIsModalStudentDropdownOpen(false);
+                            setModalStudentSearchQuery('');
+                          }}
                             className={`w-full text-left px-2.5 py-2 text-xs font-mono rounded-lg transition-all duration-150 cursor-pointer truncate flex flex-col gap-0.5 ${formStudentId === s.id ? 'bg-primary-container/20 text-primary font-bold' : 'text-secondary hover:text-white hover:bg-surface-container/60'}`}>
                             <span className="truncate">{s.lastName}, {s.firstName}</span>
                             <span className="text-[9px] text-secondary font-mono font-normal">ID: {s.studentId || 'N/A'} • {s.course}</span>
@@ -1888,7 +2069,15 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
                               <Edit3 className="h-3 w-3" />
                             </button>
                             {canApprove && (
-                              <button onClick={(e) => { e.stopPropagation(); if (confirm(`Delete log for ${studentName}?`)) onDeleteLog(log.id); }}
+                              <button onClick={(e) => { 
+                                e.stopPropagation(); 
+                                setLogToDelete({
+                                  id: log.id,
+                                  studentName,
+                                  date: log.date,
+                                  hours: log.hoursRendered
+                                });
+                              }}
                                 className="p-1 rounded text-secondary hover:text-red-400 hover:bg-surface-container transition-colors cursor-pointer" title="Delete">
                                 <Trash2 className="h-3 w-3" />
                               </button>
@@ -2042,6 +2231,11 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
                             type="button"
                             onClick={() => {
                               setFormStudentId(s.id);
+                              if (!editingLog) {
+                                const nextDate = getStudentNextDate(s.id);
+                                setFormDate(nextDate);
+                                setFormStartDate(nextDate);
+                              }
                               setIsModalStudentDropdownOpen(false);
                               setModalStudentSearchQuery('');
                             }}
@@ -2065,7 +2259,12 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {formLogMode === 'single' ? (
                   <div>
-                    <label className="block text-[10px] font-mono font-bold uppercase tracking-widest text-secondary mb-1.5">Date *</label>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-[10px] font-mono font-bold uppercase tracking-widest text-secondary">Date *</label>
+                      {previousLogDateForFormStudent && (
+                        <span className="text-[9px] text-sky-400 font-mono font-semibold uppercase tracking-wider">Next Working Day</span>
+                      )}
+                    </div>
                     <input
                       type="date"
                       required={formLogMode === 'single'}
@@ -2073,6 +2272,33 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
                       onChange={(e) => setFormDate(e.target.value)}
                       className="w-full px-3 py-2 bg-surface-container border border-glass-stroke rounded text-xs text-starlight-white focus:border-outline outline-none transition-all font-mono"
                     />
+                    {previousLogDateForFormStudent ? (
+                      <p className="text-[10px] text-secondary mt-1">
+                        Previous log: <span className="text-sky-300 font-mono font-medium">{previousLogDateForFormStudent}</span> (auto-advanced, skipped weekends)
+                      </p>
+                    ) : (
+                      (() => {
+                        const stud = studentMap.get(formStudentId);
+                        if (stud?.startDate) {
+                          return <p className="text-[10px] text-secondary mt-1">Defaulted to OJT start date ({stud.startDate})</p>;
+                        }
+                        return null;
+                      })()
+                    )}
+                    {formDate && (() => {
+                      const parts = formDate.split('-').map(Number);
+                      if (parts.length === 3 && !parts.some(isNaN)) {
+                        const d = new Date(parts[0], parts[1] - 1, parts[2]);
+                        if (d.getDay() === 0 || d.getDay() === 6) {
+                          return (
+                            <p className="text-[10px] text-amber-400 font-mono flex items-center gap-1 mt-1 font-semibold">
+                              ⚠️ {d.getDay() === 6 ? 'Saturday' : 'Sunday'} is a weekend date
+                            </p>
+                          );
+                        }
+                      }
+                      return null;
+                    })()}
                   </div>
                 ) : (
                   <div className="flex flex-col justify-end">
@@ -2299,20 +2525,54 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-3 border-t border-glass-stroke">
-                <button
-                  type="button"
-                  onClick={() => setIsLogModalOpen(false)}
-                  className="px-4 py-2 bg-surface-container-highest border border-glass-stroke rounded font-mono text-xs text-starlight-white hover:bg-outline transition-all cursor-pointer"
-                >
-                  CANCEL
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-primary-container text-white font-mono text-xs hover:bg-primary hover:text-void-black transition-colors shadow-[0_0_15px_rgba(255,84,81,0.3)] rounded cursor-pointer"
-                >
-                  {formLogMode === 'single' ? 'SAVE TIME LOG' : 'PROCEED TO SAVE'}
-                </button>
+              <div className="flex items-center justify-between pt-3 border-t border-glass-stroke">
+                <div>
+                  {editingLog && canApprove && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const stud = studentMap.get(editingLog.studentId);
+                        const name = stud ? `${stud.lastName}, ${stud.firstName}` : 'Student';
+                        setLogToDelete({
+                          id: editingLog.id,
+                          studentName: name,
+                          date: editingLog.date,
+                          hours: editingLog.hoursRendered
+                        });
+                      }}
+                      className="px-3 py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/40 text-red-400 rounded font-mono text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+                      title="Delete this time log"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      DELETE LOG
+                    </button>
+                  )}
+                </div>
+                <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsLogModalOpen(false)}
+                    className="px-4 py-2 bg-surface-container-highest border border-glass-stroke rounded font-mono text-xs text-starlight-white hover:bg-outline transition-all cursor-pointer"
+                  >
+                    CANCEL
+                  </button>
+                  {formLogMode === 'single' && !editingLog && (
+                    <button
+                      type="button"
+                      onClick={(e) => handleSaveLog(e, true)}
+                      className="px-4 py-2 bg-surface-container border border-primary/50 text-primary hover:bg-primary hover:text-void-black font-mono text-xs transition-all rounded cursor-pointer font-bold shadow-sm"
+                      title="Save this log and immediately advance to the next working day to encode another"
+                    >
+                      SAVE & ENCODE NEXT DAY
+                    </button>
+                  )}
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-primary-container text-white font-mono text-xs hover:bg-primary hover:text-void-black transition-colors shadow-[0_0_15px_rgba(255,84,81,0.3)] rounded cursor-pointer"
+                  >
+                    {formLogMode === 'single' ? 'SAVE TIME LOG' : 'PROCEED TO SAVE'}
+                  </button>
+                </div>
               </div>
             </form>
 
@@ -2441,7 +2701,7 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
                   </div>
                   <div className="flex justify-between border-t border-glass-stroke/10 pt-2">
                     <span className="text-secondary">Status:</span>
-                    <span className="text-yellow-400 font-bold bg-yellow-500/10 px-1.5 py-0.5 rounded border border-yellow-500/20">Pending Approval</span>
+                    <span className="text-emerald-400 font-bold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">Auto-Approved (Main System)</span>
                   </div>
                   {(() => {
                     const excludedDates = allDatesInRange.filter(d => !formBulkSelectedDates.includes(d));
@@ -2521,7 +2781,7 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
                 </div>
 
                 <p className="text-[10px] text-secondary italic">
-                  All newly logged entries are initialized in "Pending" status and will require review.
+                  All entries created via the main system are automatically approved and applied to student progress.
                 </p>
 
                 <button
@@ -2584,6 +2844,52 @@ export const OJTHourTrackerTab: React.FC<OJTHourTrackerTabProps> = ({
                 className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded font-mono text-xs font-bold transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)] cursor-pointer"
               >
                 REJECT LOG
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {logToDelete && (
+        <div className="fixed inset-0 bg-void-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-[70] overflow-y-auto animate-fade-in">
+          <div className="bg-void-black/95 rounded-xl border border-red-500/40 shadow-[0_8px_32px_rgba(239,68,68,0.2)] max-w-md w-full p-6 space-y-4 animate-scale-in text-white font-mono">
+            <div className="flex items-center gap-2.5 text-red-400 font-headline font-bold text-lg border-b border-glass-stroke/40 pb-3">
+              <AlertTriangle className="h-6 w-6 text-red-400 shrink-0" />
+              Confirm Delete Time Log
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <p className="text-secondary leading-relaxed">
+                Are you sure you want to permanently delete this daily time record?
+              </p>
+              <div className="bg-surface-container/40 border border-glass-stroke p-3 rounded-lg space-y-1">
+                <div className="text-starlight-white font-bold text-sm">{logToDelete.studentName}</div>
+                <div className="text-secondary">Date: <span className="text-starlight-white font-semibold">{logToDelete.date}</span></div>
+                <div className="text-secondary">Rendered Hours: <span className="text-primary font-semibold">{logToDelete.hours.toFixed(2)} hrs</span></div>
+              </div>
+              <p className="text-amber-400/90 text-[11px] leading-relaxed">
+                ⚠️ If this time log was already approved, the student's completed hours will be automatically recalculated. This action cannot be undone.
+              </p>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-2 border-t border-glass-stroke/40">
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setLogToDelete(null)}
+                className="px-4 py-2 bg-surface-container hover:bg-surface-container-highest border border-glass-stroke text-secondary hover:text-starlight-white rounded text-xs transition-colors cursor-pointer disabled:opacity-50"
+              >
+                CANCEL
+              </button>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={handleConfirmDelete}
+                className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded text-xs font-bold transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              >
+                {isDeleting ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+                {isDeleting ? 'DELETING...' : 'YES, DELETE LOG'}
               </button>
             </div>
           </div>

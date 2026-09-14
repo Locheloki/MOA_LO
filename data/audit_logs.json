@@ -1,5 +1,525 @@
 [
   {
+    "id": "log-1789369042103",
+    "timestamp": "2026-09-14T06:57:22.103Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "BULK_APPROVE_TIME_LOGS",
+    "details": "Bulk approved 30 time logs across 1 students"
+  },
+  {
+    "id": "log-1789369032953",
+    "timestamp": "2026-09-14T06:57:12.953Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: stud-1789367546715 on 2026-09-11 (Pending)"
+  },
+  {
+    "id": "log-1789369028379",
+    "timestamp": "2026-09-14T06:57:08.379Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: stud-1789367546715 on 2026-09-10 (Pending)"
+  },
+  {
+    "id": "log-1789369020137",
+    "timestamp": "2026-09-14T06:57:00.137Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.83 hrs for student ID: stud-1789367546715 on 2026-09-09 (Pending)"
+  },
+  {
+    "id": "log-1789369011776",
+    "timestamp": "2026-09-14T06:56:51.776Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.75 hrs for student ID: stud-1789367546715 on 2026-09-08 (Pending)"
+  },
+  {
+    "id": "log-1789368993733",
+    "timestamp": "2026-09-14T06:56:33.733Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.87 hrs for student ID: stud-1789367546715 on 2026-09-04 (Pending)"
+  },
+  {
+    "id": "log-1789368987191",
+    "timestamp": "2026-09-14T06:56:27.191Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.87 hrs for student ID: stud-1789367546715 on 2026-09-03 (Pending)"
+  },
+  {
+    "id": "log-1789368948128",
+    "timestamp": "2026-09-14T06:55:48.128Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.83 hrs for student ID: stud-1789367546715 on 2026-08-27 (Pending)"
+  },
+  {
+    "id": "log-1789368941714",
+    "timestamp": "2026-09-14T06:55:41.714Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.83 hrs for student ID: stud-1789367546715 on 2026-08-26 (Pending)"
+  },
+  {
+    "id": "log-1789368930486",
+    "timestamp": "2026-09-14T06:55:30.486Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.85 hrs for student ID: stud-1789367546715 on 2026-08-25 (Pending)"
+  },
+  {
+    "id": "log-1789368922975",
+    "timestamp": "2026-09-14T06:55:22.975Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.75 hrs for student ID: stud-1789367546715 on 2026-08-24 (Pending)"
+  },
+  {
+    "id": "log-1789368910347",
+    "timestamp": "2026-09-14T06:55:10.347Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.92 hrs for student ID: stud-1789367546715 on 2026-08-13 (Pending)"
+  },
+  {
+    "id": "log-1789368900438",
+    "timestamp": "2026-09-14T06:55:00.438Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.75 hrs for student ID: stud-1789367546715 on 2026-08-12 (Pending)"
+  },
+  {
+    "id": "log-1789368892932",
+    "timestamp": "2026-09-14T06:54:52.932Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.75 hrs for student ID: stud-1789367546715 on 2026-08-11 (Pending)"
+  },
+  {
+    "id": "log-1789368870087",
+    "timestamp": "2026-09-14T06:54:30.087Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.67 hrs for student ID: stud-1789367546715 on 2026-08-07 (Pending)"
+  },
+  {
+    "id": "log-1789368831243",
+    "timestamp": "2026-09-14T06:53:51.243Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 6.75 hrs for student ID: stud-1789367546715 on 2026-08-05 (Pending)"
+  },
+  {
+    "id": "log-1789368788967",
+    "timestamp": "2026-09-14T06:53:08.967Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: stud-1789367546715 on 2026-07-31 (Pending)"
+  },
+  {
+    "id": "log-1789368776192",
+    "timestamp": "2026-09-14T06:52:56.192Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: stud-1789367546715 on 2026-07-29 (Pending)"
+  },
+  {
+    "id": "log-1789368770898",
+    "timestamp": "2026-09-14T06:52:50.898Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: stud-1789367546715 on 2026-07-28 (Pending)"
+  },
+  {
+    "id": "log-1789368763803",
+    "timestamp": "2026-09-14T06:52:43.803Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.83 hrs for student ID: stud-1789367546715 on 2026-07-27 (Pending)"
+  },
+  {
+    "id": "log-1789368751535",
+    "timestamp": "2026-09-14T06:52:31.535Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: stud-1789367546715 on 2026-07-24 (Pending)"
+  },
+  {
+    "id": "log-1789368744681",
+    "timestamp": "2026-09-14T06:52:24.681Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.83 hrs for student ID: stud-1789367546715 on 2026-07-23 (Pending)"
+  },
+  {
+    "id": "log-1789368734079",
+    "timestamp": "2026-09-14T06:52:14.079Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8.03 hrs for student ID: stud-1789367546715 on 2026-07-22 (Pending)"
+  },
+  {
+    "id": "log-1789368721745",
+    "timestamp": "2026-09-14T06:52:01.745Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8.03 hrs for student ID: stud-1789367546715 on 2026-07-21 (Pending)"
+  },
+  {
+    "id": "log-1789368683378",
+    "timestamp": "2026-09-14T06:51:23.378Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8.03 hrs for student ID: stud-1789367546715 on 2026-07-20 (Pending)"
+  },
+  {
+    "id": "log-1789368668896",
+    "timestamp": "2026-09-14T06:51:08.896Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.97 hrs for student ID: stud-1789367546715 on 2026-07-17 (Pending)"
+  },
+  {
+    "id": "log-1789368661788",
+    "timestamp": "2026-09-14T06:51:01.788Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.98 hrs for student ID: stud-1789367546715 on 2026-07-16 (Pending)"
+  },
+  {
+    "id": "log-1789368647558",
+    "timestamp": "2026-09-14T06:50:47.558Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: stud-1789367546715 on 2026-07-15 (Pending)"
+  },
+  {
+    "id": "log-1789368623819",
+    "timestamp": "2026-09-14T06:50:23.819Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.83 hrs for student ID: stud-1789367546715 on 2026-07-14 (Pending)"
+  },
+  {
+    "id": "log-1789368467252",
+    "timestamp": "2026-09-14T06:47:47.252Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1789368104102",
+    "timestamp": "2026-09-14T06:41:44.102Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 7.92 hrs for student ID: stud-1789367546715 on 2026-07-13 (Pending)"
+  },
+  {
+    "id": "log-1789368026105",
+    "timestamp": "2026-09-14T06:40:26.105Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: stud-1789367546715 on 2026-07-10 (Pending)"
+  },
+  {
+    "id": "log-1789367912054",
+    "timestamp": "2026-09-14T06:38:32.054Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "APPROVE_TIME_LOG",
+    "details": "Approved DTR #tl-1789367904129-593 for student ID: stud-1789367546715 (8 hrs on 2026-07-09)"
+  },
+  {
+    "id": "log-1789367904131",
+    "timestamp": "2026-09-14T06:38:24.131Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8 hrs for student ID: stud-1789367546715 on 2026-07-09 (Pending)"
+  },
+  {
+    "id": "log-1789367546719",
+    "timestamp": "2026-09-14T06:32:26.719Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_STUDENT",
+    "details": "Enrolled student: Jasper Ian Ferrer (2026-56962)"
+  },
+  {
+    "id": "log-1789364266821",
+    "timestamp": "2026-09-14T05:37:46.821Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1789096620418",
+    "timestamp": "2026-09-11T03:17:00.418Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1786522059644-870 (Pending) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1789096618433",
+    "timestamp": "2026-09-11T03:16:58.433Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1786598922746-962 (Pending) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1789096616481",
+    "timestamp": "2026-09-11T03:16:56.481Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1789095008353-780 (Pending) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1789096614692",
+    "timestamp": "2026-09-11T03:16:54.692Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1789095889998-53 (Pending) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1789096604859",
+    "timestamp": "2026-09-11T03:16:44.859Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1789096191972-715 (Pending) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1789096602659",
+    "timestamp": "2026-09-11T03:16:42.659Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1789096344659-522 (Pending) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1789096599043",
+    "timestamp": "2026-09-11T03:16:39.043Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1789096578286-22 (Pending) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1789096588761",
+    "timestamp": "2026-09-11T03:16:28.761Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
+    "id": "log-1789096578287",
+    "timestamp": "2026-09-11T03:16:18.287Z",
+    "userName": "Guillermo Jimz Jimenez",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 5.7 hrs for student ID: stud-1786505491247 on 2026-09-11 (Pending)"
+  },
+  {
+    "id": "log-1789096515321",
+    "timestamp": "2026-09-11T03:15:15.321Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1789096515272-105 (Pending) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1789096515272",
+    "timestamp": "2026-09-11T03:15:15.272Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 3 hrs for student ID: stud-1786505491247 on 2026-09-11 (Pending)"
+  },
+  {
+    "id": "log-1789096344659",
+    "timestamp": "2026-09-11T03:12:24.659Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 3 hrs for student ID: stud-1786505491247 on 2026-09-11 (Pending)"
+  },
+  {
+    "id": "log-1789096293997",
+    "timestamp": "2026-09-11T03:11:33.997Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1789096293984-728 (Pending) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1789096293984",
+    "timestamp": "2026-09-11T03:11:33.984Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 3 hrs for student ID: stud-1786505491247 on 2026-09-11 (Pending)"
+  },
+  {
+    "id": "log-1789096204532",
+    "timestamp": "2026-09-11T03:10:04.532Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-1789096204521-579 (Pending) for student ID: stud-1786505491247"
+  },
+  {
+    "id": "log-1789096204522",
+    "timestamp": "2026-09-11T03:10:04.522Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 3 hrs for student ID: stud-1786505491247 on 2026-09-11 (Pending)"
+  },
+  {
+    "id": "log-1789096191972",
+    "timestamp": "2026-09-11T03:09:51.972Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 3 hrs for student ID: stud-1786505491247 on 2026-09-11 (Pending)"
+  },
+  {
+    "id": "log-1789095889999",
+    "timestamp": "2026-09-11T03:04:49.999Z",
+    "userName": "Guillermo Jimz Jimenez",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 4.97 hrs for student ID: stud-1786505491247 on 2026-09-11 (Pending)"
+  },
+  {
+    "id": "log-1789095008353",
+    "timestamp": "2026-09-11T02:50:08.353Z",
+    "userName": "Guillermo Jimz Jimenez",
+    "userRole": "Administrator",
+    "action": "CREATE_TIME_LOG",
+    "details": "Logged 8.02 hrs for student ID: stud-1786505491247 on 2026-09-11 (Pending)"
+  },
+  {
+    "id": "log-1789094563717",
+    "timestamp": "2026-09-11T02:42:43.717Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-demo-1004 (Approved) for student ID: stud-placeholder-demo-02"
+  },
+  {
+    "id": "log-1789094562762",
+    "timestamp": "2026-09-11T02:42:42.762Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-demo-1001 (Approved) for student ID: stud-placeholder-demo-01"
+  },
+  {
+    "id": "log-1789094562188",
+    "timestamp": "2026-09-11T02:42:42.188Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-demo-1002 (Approved) for student ID: stud-placeholder-demo-01"
+  },
+  {
+    "id": "log-1789094560073",
+    "timestamp": "2026-09-11T02:42:40.073Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_TIME_LOG",
+    "details": "Deleted DTR #tl-demo-1003 (Approved) for student ID: stud-placeholder-demo-01"
+  },
+  {
+    "id": "log-1789094544417",
+    "timestamp": "2026-09-11T02:42:24.417Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_RECORD",
+    "details": "Deleted LO control: LO-2026-0002"
+  },
+  {
+    "id": "log-1789094543435",
+    "timestamp": "2026-09-11T02:42:23.435Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_RECORD",
+    "details": "Deleted LO control: LO-2026-0001"
+  },
+  {
+    "id": "log-1789094539180",
+    "timestamp": "2026-09-11T02:42:19.180Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_RECORD",
+    "details": "Deleted MOA control: MOA-2026-0003"
+  },
+  {
+    "id": "log-1789094538067",
+    "timestamp": "2026-09-11T02:42:18.067Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_RECORD",
+    "details": "Deleted MOA control: MOA-2026-0002"
+  },
+  {
+    "id": "log-1789094535965",
+    "timestamp": "2026-09-11T02:42:15.965Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "DELETE_RECORD",
+    "details": "Deleted MOA control: MOA-2026-0001"
+  },
+  {
+    "id": "log-1789091442311",
+    "timestamp": "2026-09-11T01:50:42.311Z",
+    "userName": "Administrator",
+    "userRole": "Administrator",
+    "action": "LOGIN",
+    "details": "Logged in from network client"
+  },
+  {
     "id": "log-1788925177539",
     "timestamp": "2026-09-09T03:39:37.539Z",
     "userName": "Administrator",

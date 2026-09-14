@@ -260,7 +260,6 @@ export default function Dashboard({
             <table className="w-full text-left border-collapse min-w-[600px]">
               <thead>
                 <tr className="border-b border-glass-stroke text-secondary text-[10px] font-mono uppercase tracking-wider bg-surface-container/20">
-                  <th className="px-6 py-3 font-semibold">Control Number</th>
                   <th className="px-6 py-3 font-semibold">Document Title</th>
                   <th className="px-6 py-3 font-semibold">Type</th>
                   <th className="px-6 py-3 font-semibold">Status</th>
@@ -270,9 +269,6 @@ export default function Dashboard({
               <tbody className="divide-y divide-glass-stroke/50 text-sm text-starlight-white font-sans">
                 {recentRecords.map((item) => (
                   <tr key={item.id} className="hover:bg-surface-container-highest/20 transition-colors">
-                    <td className="px-6 py-4 font-mono text-xs font-bold text-primary">
-                      {item.controlNumber}
-                    </td>
                     <td className="px-6 py-4 max-w-md">
                       <p 
                         className="font-medium text-starlight-white truncate hover:underline cursor-pointer" 

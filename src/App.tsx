@@ -3,7 +3,7 @@ import {
   Landmark, ShieldCheck, Users, Settings as SettingsIcon, FileText, 
   Search, Plus, Download, Upload, Trash2, Edit2, Printer, X, Eye, CheckCircle2,
   AlertCircle, ArrowLeft, ArrowRight, RefreshCw, Calendar, Award, GraduationCap, Check, Lock, LogOut, Building2, Briefcase, Menu, LayoutDashboard, Phone,
-  Clock, CheckCheck, XCircle, Clock3, Sun, Moon
+  Clock, CheckCheck, XCircle, Clock3, Sun, Moon, Home
 } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
 import Dashboard from './components/Dashboard';
@@ -1057,10 +1057,11 @@ interface StudentDtrModalProps {
   canApprove?: boolean;
   onApproveLog?: (id: string) => Promise<void>;
   onRejectLog?: (id: string, reason: string) => Promise<void>;
+  onDeleteLog?: (id: string) => Promise<void>;
   onClose: () => void;
 }
 
-function StudentDtrModal({ selectedDtrStudent, timeLogs, canApprove, onApproveLog, onRejectLog, onClose }: StudentDtrModalProps) {
+function StudentDtrModal({ selectedDtrStudent, timeLogs, canApprove, onApproveLog, onRejectLog, onDeleteLog, onClose }: StudentDtrModalProps) {
   const student = selectedDtrStudent;
   const targetHours = student.hoursRequired || 480;
   const completedHours = student.hoursCompleted || 0;
@@ -1211,27 +1212,40 @@ function StudentDtrModal({ selectedDtrStudent, timeLogs, canApprove, onApproveLo
                         </td>
                         {canApprove && (
                           <td className="p-3 text-right">
-                            {log.status === 'Pending' && onApproveLog && onRejectLog ? (
-                              <div className="flex items-center justify-end gap-1.5">
-                                <button
-                                  onClick={() => onApproveLog(log.id)}
-                                  className="px-2.5 py-1 bg-green-600/90 hover:bg-green-500 text-white font-mono text-[10px] font-bold rounded transition-all cursor-pointer shadow-sm"
-                                >
-                                  APPROVE
-                                </button>
+                            <div className="flex items-center justify-end gap-1.5">
+                              {log.status === 'Pending' && onApproveLog && onRejectLog && (
+                                <>
+                                  <button
+                                    onClick={() => onApproveLog(log.id)}
+                                    className="px-2.5 py-1 bg-green-600/90 hover:bg-green-500 text-white font-mono text-[10px] font-bold rounded transition-all cursor-pointer shadow-sm"
+                                  >
+                                    APPROVE
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      const reason = prompt('Enter rejection reason:');
+                                      if (reason) onRejectLog(log.id, reason);
+                                    }}
+                                    className="px-2.5 py-1 bg-red-600/90 hover:bg-red-500 text-white font-mono text-[10px] font-bold rounded transition-all cursor-pointer shadow-sm"
+                                  >
+                                    REJECT
+                                  </button>
+                                </>
+                              )}
+                              {onDeleteLog && (
                                 <button
                                   onClick={() => {
-                                    const reason = prompt('Enter rejection reason:');
-                                    if (reason) onRejectLog(log.id, reason);
+                                    if (confirm(`Delete time log for ${student.firstName} ${student.lastName} on ${log.date}?`)) {
+                                      onDeleteLog(log.id);
+                                    }
                                   }}
-                                  className="px-2.5 py-1 bg-red-600/90 hover:bg-red-500 text-white font-mono text-[10px] font-bold rounded transition-all cursor-pointer shadow-sm"
+                                  className="p-1 text-secondary hover:text-red-400 hover:bg-surface-container rounded transition-colors cursor-pointer"
+                                  title="Delete Log"
                                 >
-                                  REJECT
+                                  <Trash2 className="h-3.5 w-3.5" />
                                 </button>
-                              </div>
-                            ) : (
-                              <span className="text-secondary/40 text-[10px] font-mono">—</span>
-                            )}
+                              )}
+                            </div>
                           </td>
                         )}
                       </tr>
@@ -1278,23 +1292,40 @@ function StudentDtrModal({ selectedDtrStudent, timeLogs, canApprove, onApproveLo
                       <p className="text-[11px] text-secondary italic border-t border-glass-stroke/20 pt-1.5">"{log.notes}"</p>
                     )}
 
-                    {canApprove && log.status === 'Pending' && onApproveLog && onRejectLog && (
+                    {canApprove && (
                       <div className="flex gap-2 pt-2 border-t border-glass-stroke/30">
-                        <button
-                          onClick={() => onApproveLog(log.id)}
-                          className="flex-1 py-2 bg-transparent border border-green-500 text-green-400 hover:bg-green-500/10 font-mono text-xs font-bold rounded-lg transition-all cursor-pointer text-center active:scale-95"
-                        >
-                          APPROVE
-                        </button>
-                        <button
-                          onClick={() => {
-                            const reason = prompt('Enter rejection reason:');
-                            if (reason) onRejectLog(log.id, reason);
-                          }}
-                          className="flex-1 py-2 bg-transparent border border-red-500 text-red-400 hover:bg-red-500/10 font-mono text-xs font-bold rounded-lg transition-all cursor-pointer text-center active:scale-95"
-                        >
-                          REJECT
-                        </button>
+                        {log.status === 'Pending' && onApproveLog && onRejectLog && (
+                          <>
+                            <button
+                              onClick={() => onApproveLog(log.id)}
+                              className="flex-1 py-2 bg-transparent border border-green-500 text-green-400 hover:bg-green-500/10 font-mono text-xs font-bold rounded-lg transition-all cursor-pointer text-center active:scale-95"
+                            >
+                              APPROVE
+                            </button>
+                            <button
+                              onClick={() => {
+                                const reason = prompt('Enter rejection reason:');
+                                if (reason) onRejectLog(log.id, reason);
+                              }}
+                              className="flex-1 py-2 bg-transparent border border-red-500 text-red-400 hover:bg-red-500/10 font-mono text-xs font-bold rounded-lg transition-all cursor-pointer text-center active:scale-95"
+                            >
+                              REJECT
+                            </button>
+                          </>
+                        )}
+                        {onDeleteLog && (
+                          <button
+                            onClick={() => {
+                              if (confirm(`Delete time log for ${student.firstName} ${student.lastName} on ${log.date}?`)) {
+                                onDeleteLog(log.id);
+                              }
+                            }}
+                            className="px-3 py-2 bg-surface-container hover:bg-red-500/20 border border-glass-stroke text-red-400 font-mono text-xs rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1"
+                            title="Delete Log"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>
@@ -1785,9 +1816,10 @@ export default function App() {
             breakMinutes: Number(attendBreak) || 0,
             hoursRendered: hours,
             notes: attendNotes.trim() || undefined,
-            status: 'Pending'
+            status: 'Pending',
+            source: 'kiosk'
           },
-          user: { name: `${attendStudent.firstName} ${attendStudent.lastName}`, role: 'Administrator' }
+          user: { name: `${attendStudent.firstName} ${attendStudent.lastName}`, role: 'Student' }
         })
       });
       if (!logRes.ok) {
@@ -2076,8 +2108,16 @@ export default function App() {
 
   // Time Logs Actions
   const handleAddTimeLog = async (logData: Omit<OJTTimeLog, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const newLog = await createTimeLog(logData);
+    const res: any = await createTimeLog(logData);
+    const newLog = res.log || res;
     setTimeLogs(prev => [newLog, ...prev]);
+    if (res.updatedStudent) {
+      const updatedS = res.updatedStudent;
+      setStudents(prev => prev.map(s => s.id === updatedS.id ? updatedS : s));
+      if (selectedDtrStudent && selectedDtrStudent.id === updatedS.id) {
+        setSelectedDtrStudent(updatedS);
+      }
+    }
   };
 
   const handleUpdateTimeLog = async (id: string, updates: Partial<OJTTimeLog>) => {
@@ -2117,14 +2157,21 @@ export default function App() {
   };
 
   const handleDeleteTimeLog = async (id: string) => {
-    const res = await deleteTimeLog(id);
-    setTimeLogs(prev => prev.filter(l => l.id !== id));
-    if (res.updatedStudent) {
-      const updatedS = res.updatedStudent;
-      setStudents(prev => prev.map(s => s.id === updatedS.id ? updatedS : s));
-      if (selectedDtrStudent && selectedDtrStudent.id === updatedS.id) {
-        setSelectedDtrStudent(updatedS);
+    try {
+      const res = await deleteTimeLog(id, currentUser);
+      setTimeLogs(prev => prev.filter(l => l.id !== id));
+      if (res.updatedStudent) {
+        const updatedS = res.updatedStudent;
+        setStudents(prev => prev.map(s => s.id === updatedS.id ? updatedS : s));
+        if (selectedDtrStudent && selectedDtrStudent.id === updatedS.id) {
+          setSelectedDtrStudent(updatedS);
+        }
       }
+      toast.success('Time log deleted successfully');
+    } catch (err: any) {
+      console.error('Failed to delete time log:', err);
+      toast.error(err.message || 'Failed to delete time log');
+      throw err;
     }
   };
 
@@ -2162,6 +2209,22 @@ export default function App() {
     }
 
     return res;
+  };
+
+  const handleRefreshHourTracker = async () => {
+    const [allLogs, allStudents] = await Promise.all([
+      getTimeLogs().catch(() => []),
+      getStudents().catch(() => [])
+    ]);
+    setTimeLogs(allLogs);
+    setStudents(allStudents);
+
+    if (selectedDtrStudent) {
+      const freshStud = allStudents.find(s => s.id === selectedDtrStudent.id);
+      if (freshStud) {
+        setSelectedDtrStudent(freshStud);
+      }
+    }
   };
 
   // Student Form Actions
@@ -2213,8 +2276,8 @@ export default function App() {
 
   const handleSaveStudent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!studFirst || !studLast || !studCourse || !studSchool || !studReqHours || !studStart || !studOffice || !studAddress) {
-      toast.error('First Name, Last Name, Program/Course, School, OJT Hours, Start Date, Office, and Address are required.');
+    if (!studFirst || !studLast || !studCourse || !studSchool || !studReqHours || !studStart || !studOffice) {
+      toast.error('First Name, Last Name, Program/Course, School, OJT Hours, Start Date, and Office are required.');
       return;
     }
 
@@ -2236,6 +2299,9 @@ export default function App() {
       }
     }
 
+    const hasFinishDate = Boolean(studEnd && studEnd.trim());
+    const hoursReq = Number(studReqHours);
+
     const studData = {
       studentId,
       firstName: formatProperName(studFirst),
@@ -2249,12 +2315,16 @@ export default function App() {
       yearAndSection: `School: ${studSchool}`,
       moaId: matchedMoaId,
       organizationId: editingStudent?.organizationId,
-      hoursRequired: Number(studReqHours),
-      hoursCompleted: editingStudent ? editingStudent.hoursCompleted : 0,
-      status: editingStudent ? editingStudent.status : 'On-going',
+      hoursRequired: hoursReq,
+      hoursCompleted: hasFinishDate 
+        ? (editingStudent ? Math.max(editingStudent.hoursCompleted, hoursReq) : hoursReq)
+        : (editingStudent ? editingStudent.hoursCompleted : 0),
+      status: (hasFinishDate 
+        ? 'Completed' 
+        : (editingStudent ? (editingStudent.status === 'Completed' && !studEnd ? 'On-going' : editingStudent.status) : 'On-going')) as 'Not Started' | 'On-going' | 'Completed' | 'Suspended',
       startDate: studStart || undefined,
-      endDate: editingStudent ? editingStudent.endDate : undefined,
-      legacyHours: studLegacyHours !== '' ? Number(studLegacyHours) : undefined
+      endDate: hasFinishDate ? studEnd.trim() : undefined,
+      legacyHours: studLegacyHours !== '' ? Number(studLegacyHours) : (hasFinishDate ? hoursReq : undefined)
     };
 
     try {
@@ -3485,7 +3555,7 @@ export default function App() {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary h-4 w-4" />
                         <input
                           type="text"
-                          placeholder={currentTab === 'moa' ? 'Search by Control ID, Title, or Partner...' : 'Search by Control ID, Title, Requested By...'}
+                          placeholder={currentTab === 'moa' ? 'Search by Title or Partner...' : 'Search by Title, Requested By...'}
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           className="w-full pl-10 pr-4 py-2 bg-surface-container border border-glass-stroke rounded font-sans text-sm text-starlight-white focus:border-outline focus:bg-surface-container-highest outline-none transition-all placeholder:text-secondary shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
@@ -3556,7 +3626,6 @@ export default function App() {
                       <table className="w-full text-left border-collapse min-w-[800px]">
                         <thead>
                           <tr className="border-b border-glass-stroke bg-surface-container/50 text-secondary font-mono text-xs tracking-wider uppercase">
-                            <th className="px-6 py-4 font-medium">Control ID</th>
                             <th className="px-6 py-4 font-medium">Title</th>
                             {currentTab === 'moa' ? (
                               <th className="px-6 py-4 font-medium">Parties Involved</th>
@@ -3572,9 +3641,6 @@ export default function App() {
                           {filteredRecords.length > 0 ? (
                             filteredRecords.map((rec) => (
                               <tr key={rec.id} className="hover:bg-surface-container-highest/40 transition-colors group">
-                                <td className="px-6 py-4 font-mono text-xs text-primary tracking-wider">
-                                  {rec.controlNumber}
-                                </td>
                                 <td className="px-6 py-4 font-medium max-w-sm">
                                   <div className="text-starlight-white truncate font-medium" title={rec.title}>
                                     {rec.title}
@@ -3654,7 +3720,7 @@ export default function App() {
                             ))
                           ) : (
                             <tr>
-                              <td colSpan={6} className="py-12 text-center text-secondary">
+                              <td colSpan={5} className="py-12 text-center text-secondary">
                                 No agreements or legal opinions match the filters.
                               </td>
                             </tr>
@@ -3918,7 +3984,7 @@ export default function App() {
                                     </p>
                                   </div>
 
-                                  {/* Assigned Office & Address */}
+                                  {/* Assigned Office */}
                                   <div>
                                     <div className="flex items-center gap-1.5 text-xs font-semibold text-starlight-white">
                                       <Building2 className="h-4 w-4 text-primary shrink-0" />
@@ -3926,14 +3992,17 @@ export default function App() {
                                         {stud.office || 'N/A'}
                                       </span>
                                     </div>
-                                    {stud.address && (
-                                      <div className="ml-5.5 mt-1">
-                                        <span className="text-[10px] font-mono text-sky-300 bg-sky-950/40 border border-sky-800/40 px-2 py-0.5 rounded inline-block truncate max-w-full">
-                                          {stud.address}
-                                        </span>
-                                      </div>
-                                    )}
                                   </div>
+
+                                  {/* Student Home Address */}
+                                  {stud.address && (
+                                    <div className="flex items-center gap-1.5 text-xs text-secondary">
+                                      <Home className="h-3.5 w-3.5 text-sky-400 shrink-0" />
+                                      <span className="text-[11px] font-mono text-sky-300/90 truncate" title={`Home Address: ${stud.address}`}>
+                                        {stud.address}
+                                      </span>
+                                    </div>
+                                  )}
 
                                   {/* Dates Section: Start Date & End Date */}
                                   <div className="grid grid-cols-2 gap-2 pt-2 border-t border-glass-stroke/30">
@@ -4810,6 +4879,7 @@ export default function App() {
                     students={students}
                     userRole={currentUser?.role || ''}
                     userName={currentUser?.name || ''}
+                    onRefresh={handleRefreshHourTracker}
                     onAddLog={handleAddTimeLog}
                     onUpdateLog={handleUpdateTimeLog}
                     onApproveLog={handleApproveTimeLog}
@@ -5604,8 +5674,8 @@ export default function App() {
                 <h4 className="text-sm font-bold text-starlight-white font-headline">On-the-Job Training Details</h4>
               </div>
 
-              {/* Row 3: OJT Hours, Start Date, End Date */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Row 3: OJT Hours & Start Date */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-mono font-bold uppercase tracking-widest text-secondary mb-1.5">OJT Hours</label>
                   <input
@@ -5627,6 +5697,10 @@ export default function App() {
                     className="w-full px-3 py-2 bg-surface-container border border-glass-stroke rounded text-sm text-starlight-white focus:border-outline outline-none transition-all font-mono"
                   />
                 </div>
+              </div>
+
+              {/* Row 4: Est. Completion Date & Finish Date */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-mono font-bold uppercase tracking-widest text-secondary mb-1.5">Est. Completion</label>
                   <div className="w-full px-3 py-2 bg-surface-container-highest border border-glass-stroke/50 rounded text-sm text-secondary font-mono flex items-center justify-between cursor-not-allowed h-[38px] overflow-hidden">
@@ -5639,6 +5713,20 @@ export default function App() {
                     )}
                     <span className="text-[9px] uppercase tracking-wider text-primary ml-2 flex-shrink-0">Estimate</span>
                   </div>
+                  <p className="text-[10px] text-secondary mt-1">Calculated expected completion timeline.</p>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-[10px] font-mono font-bold uppercase tracking-widest text-secondary">Finish Date</label>
+                    <span className="text-[9px] text-primary/80 font-mono uppercase tracking-wider">Optional</span>
+                  </div>
+                  <input
+                    type="date"
+                    value={studEnd}
+                    onChange={(e) => setStudEnd(e.target.value)}
+                    className="w-full px-3 py-2 bg-surface-container border border-glass-stroke rounded text-sm text-starlight-white focus:border-outline outline-none transition-all font-mono"
+                  />
+                  <p className="text-[10px] text-secondary mt-1">Leave blank if the intern is not yet finished.</p>
                 </div>
               </div>
 
@@ -5662,27 +5750,29 @@ export default function App() {
                 />
               </div>
 
-              {/* Row 4: Office & Address */}
+              {/* Row 5: Office & Student Home Address */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[10px] font-mono font-bold uppercase tracking-widest text-secondary mb-1.5">Office</label>
+                  <label className="block text-[10px] font-mono font-bold uppercase tracking-widest text-secondary mb-1.5">Assigned Office</label>
                   <input
                     type="text"
                     required
                     value={studOffice}
                     onChange={(e) => setStudOffice(e.target.value)}
-                    placeholder="Office"
+                    placeholder="e.g. Provincial Legal Office"
                     className="w-full px-3 py-2 bg-surface-container border border-glass-stroke rounded text-sm text-starlight-white placeholder-secondary focus:border-outline focus:bg-surface-container-highest outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-mono font-bold uppercase tracking-widest text-secondary mb-1.5">Address</label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-[10px] font-mono font-bold uppercase tracking-widest text-secondary">Student Home Address</label>
+                    <span className="text-[9px] text-secondary font-mono uppercase tracking-wider">Optional</span>
+                  </div>
                   <input
                     type="text"
-                    required
                     value={studAddress}
                     onChange={(e) => setStudAddress(e.target.value)}
-                    placeholder="Address"
+                    placeholder="e.g. Brgy. Poblacion, Lingayen, Pangasinan"
                     className="w-full px-3 py-2 bg-surface-container border border-glass-stroke rounded text-sm text-starlight-white placeholder-secondary focus:border-outline focus:bg-surface-container-highest outline-none transition-all"
                   />
                 </div>
@@ -6067,6 +6157,7 @@ export default function App() {
           canApprove={currentUser?.role === 'Administrator' || currentUser?.role === 'OJT Coordinator'}
           onApproveLog={handleApproveTimeLog}
           onRejectLog={handleRejectTimeLog}
+          onDeleteLog={handleDeleteTimeLog}
           onClose={() => setIsStudentDtrModalOpen(false)}
         />
       )}

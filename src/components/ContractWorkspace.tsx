@@ -242,9 +242,6 @@ export default function ContractWorkspace({
         <header className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs font-bold text-slate-400 bg-white border border-slate-200 px-2 py-0.5 rounded">
-                {contract.controlNumber}
-              </span>
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                 contract.status === 'Active' || contract.status === 'Issued' 
                   ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'

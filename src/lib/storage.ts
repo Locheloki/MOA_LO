@@ -313,7 +313,7 @@ export async function getTimeLogs(studentId?: string): Promise<OJTTimeLog[]> {
 
 export async function createTimeLog(
   log: Omit<OJTTimeLog, 'id' | 'createdAt' | 'updatedAt'>
-): Promise<OJTTimeLog> {
+): Promise<{ log: OJTTimeLog; updatedStudent?: OJTStudent } & OJTTimeLog> {
   const user = getCurrentUser();
   const res = await fetch('/api/time-logs', {
     method: 'POST',
@@ -378,12 +378,17 @@ export async function rejectTimeLog(
 }
 
 export async function deleteTimeLog(
-  id: string
+  id: string,
+  userParam?: UserSession | null
 ): Promise<{ success: boolean; updatedStudent?: OJTStudent }> {
-  const user = getCurrentUser();
-  const res = await fetch(`/api/time-logs/${id}`, {
+  const user = userParam || getCurrentUser();
+  const query = user ? `?user=${encodeURIComponent(JSON.stringify(user))}` : '';
+  const res = await fetch(`/api/time-logs/${id}${query}`, {
     method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      ...(user ? { 'X-User': JSON.stringify(user) } : {})
+    },
     body: JSON.stringify({ user })
   });
   if (!res.ok) {
@@ -410,7 +415,7 @@ export async function bulkApproveTimeLogs(
 }
 
 export async function createTimeLogsBulk(
-  logs: Omit<OJTTimeLog, 'id' | 'createdAt' | 'updatedAt' | 'status'>[],
+  logs: (Omit<OJTTimeLog, 'id' | 'createdAt' | 'updatedAt' | 'status'> & { status?: TimeLogStatus; reviewedBy?: string; reviewedAt?: string })[],
   replaceExisting: boolean
 ): Promise<{
   created: OJTTimeLog[];
